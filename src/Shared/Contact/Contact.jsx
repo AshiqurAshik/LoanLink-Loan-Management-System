@@ -1,65 +1,47 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import contactImg from '../../../assets/contact-illustration.svg';
+import contactImg from '../../assets/call.svg';
 
 const Contact = () => {
   return (
-    <section className="w-11/12 mx-auto py-20 relative">
-      <div className="flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-20">
+    <section className="w-11/12 mx-auto py-24 relative">
+      <div className="flex flex-col-reverse lg:flex-row items-center gap-16 lg:gap-24">
         {/* Left: Form */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="flex-1"
+          className="flex-1 bg-card-dark dark:bg-card-dark p-10 rounded-3xl shadow-2xl"
         >
-          <h2 className="text-4xl sm:text-5xl font-extrabold text-primary mb-6">
+          <h2 className="text-4xl sm:text-5xl font-extrabold text-highlight-blue mb-6">
             Get in Touch
           </h2>
-          <p className="text-gray-700 dark:text-gray-300 text-lg sm:text-xl mb-8">
+          <p className="text-text-secondary dark:text-text-secondary mb-8 text-lg sm:text-xl">
             Have questions or need support? Fill out the form below and our team will get back to you promptly.
           </p>
 
-          <form className="space-y-4">
-            <div>
-              <label className="label">
-                <span className="label-text text-gray-700 dark:text-gray-300">Full Name</span>
-              </label>
-              <input
-                type="text"
-                placeholder="John Doe"
-                className="input input-bordered w-full rounded-lg bg-white dark:bg-card-dark border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100"
-              />
-            </div>
-
-            <div>
-              <label className="label">
-                <span className="label-text text-gray-700 dark:text-gray-300">Email</span>
-              </label>
-              <input
-                type="email"
-                placeholder="you@example.com"
-                className="input input-bordered w-full rounded-lg bg-white dark:bg-card-dark border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100"
-              />
-            </div>
-
-            <div>
-              <label className="label">
-                <span className="label-text text-gray-700 dark:text-gray-300">Message</span>
-              </label>
-              <textarea
-                placeholder="Your message..."
-                className="textarea textarea-bordered w-full rounded-lg bg-white dark:bg-card-dark border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-100"
-                rows={5}
-              ></textarea>
-            </div>
-
+          <form className="space-y-6">
+            <input
+              type="text"
+              placeholder="Full Name"
+              className="w-full p-4 rounded-xl bg-deep-navy text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-info transition-all"
+            />
+            <input
+              type="email"
+              placeholder="Email Address"
+              className="w-full p-4 rounded-xl bg-deep-navy text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-info transition-all"
+            />
+            <textarea
+              rows={5}
+              placeholder="Your Message"
+              className="w-full p-4 rounded-xl bg-deep-navy text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-info transition-all"
+            ></textarea>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               type="submit"
-              className="w-full py-3 rounded-lg bg-info text-white font-semibold hover:bg-info/90 shadow-lg transition-all"
+              className="w-full py-4 rounded-xl bg-info text-deep-navy font-bold hover:bg-info/90 shadow-xl transition-all"
             >
               Send Message
             </motion.button>
@@ -76,13 +58,13 @@ const Contact = () => {
         >
           <img
             src={contactImg}
-            alt="Contact illustration"
-            className="w-full max-w-lg rounded-2xl shadow-2xl"
+            alt="Contact Illustration"
+            className="w-full max-w-lg rounded-3xl shadow-2xl"
           />
         </motion.div>
       </div>
 
-      {/* Background Shapes */}
+      {/* Animated Background Shapes */}
       <motion.div
         className="absolute top-0 left-0 w-48 h-48 bg-info/20 rounded-full blur-3xl animate-pulse"
         initial={{ scale: 0 }}
