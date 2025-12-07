@@ -1,12 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, NavLink } from 'react-router';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import ThemeToggle from '../Theme/ThemeToggle';
+import { AuthContext } from '../../Auth/AuthContext';
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user, signOutUser } = useContext(AuthContext);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
+
+  const handleLogout = async () => {
+    try {
+      await signOutUser();
+      // Optional: show toast or alert
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const links = [
     { name: 'Home', path: '/' },
@@ -17,7 +28,7 @@ const Navbar = () => {
 
   return (
     <nav className="sticky top-0 z-50 bg-base-100/80 backdrop-blur-lg border-b border-base-300 shadow-sm">
-      <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+      <div className="w-11/12 mx-auto px-6 py-3 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center">
           <Link
@@ -50,12 +61,21 @@ const Navbar = () => {
         {/* Desktop Right Buttons */}
         <div className="hidden lg:flex items-center space-x-3">
           <ThemeToggle />
-          <Link
-            to="/login"
-            className="px-4 py-2 rounded-lg border border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-all shadow-sm"
-          >
-            Login
-          </Link>
+          {user ? (
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 rounded-lg border border-red-500 text-red-500 font-semibold hover:bg-red-500 hover:text-white transition-all shadow-sm"
+            >
+              Logout
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="px-4 py-2 rounded-lg border border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-all shadow-sm"
+            >
+              Login
+            </Link>
+          )}
         </div>
 
         {/* Mobile Hamburger */}
@@ -93,14 +113,27 @@ const Navbar = () => {
               {link.name}
             </NavLink>
           ))}
+
           <div className="flex flex-col space-y-2 mt-2">
-            <Link
-              to="/login"
-              onClick={() => setMenuOpen(false)}
-              className="px-4 py-2 rounded-lg border border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-all shadow-sm"
-            >
-              Login
-            </Link>
+            {user ? (
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setMenuOpen(false);
+                }}
+                className="px-4 py-2 rounded-lg border border-red-500 text-red-500 font-semibold hover:bg-red-500 hover:text-white transition-all shadow-sm"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                onClick={() => setMenuOpen(false)}
+                className="px-4 py-2 rounded-lg border border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-all shadow-sm"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </ul>
       </div>

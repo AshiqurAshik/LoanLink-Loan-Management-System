@@ -1,24 +1,50 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router';
 import { FcGoogle } from 'react-icons/fc';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Swal from 'sweetalert2';
+import { AuthContext } from '../../Auth/AuthContext';
 
 const LoginPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
+  const { SignInUser, googleSignIn } = useContext(AuthContext);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit = (data) => {
-    console.log(data);
-    Swal.fire({
-      icon: 'success',
-      title: 'Login Successful',
-      text: `Welcome back!`,
-      confirmButtonColor: '#4f46e5',
-    });
+  const onSubmit = async (data) => {
+    try {
+      await SignInUser(data.email, data.password);
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Successful',
+        text: `Welcome back!`,
+        confirmButtonColor: '#4f46e5',
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: error.message,
+      });
+    }
   };
 
-  const handleGoogleLogin = () => {
-    console.log('Google login clicked');
+  const handleGoogleLogin = async () => {
+    try {
+      await googleSignIn();
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Successful',
+        text: `Welcome back!`,
+        confirmButtonColor: '#4f46e5',
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: error.message,
+      });
+    }
   };
 
   return (
@@ -40,24 +66,35 @@ const LoginPage = () => {
             <input
               type="email"
               placeholder="you@example.com"
-              className="input input-bordered w-full rounded-lg"
+              className="input input-bordered w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               {...register('email', { required: 'Email is required' })}
             />
-            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+            )}
           </div>
 
           {/* Password */}
-          <div>
+          <div className="relative">
             <label className="label">
               <span className="label-text">Password</span>
             </label>
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               placeholder="********"
-              className="input input-bordered w-full rounded-lg"
+              className="input input-bordered w-full rounded-lg pr-12 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               {...register('password', { required: 'Password is required' })}
             />
-            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
+            <button
+              type="button"
+              className="absolute right-3 top-1/2 -translate-y-1/2 mt-3 text-gray-500 hover:text-primary transition-colors"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+            )}
           </div>
 
           <button
