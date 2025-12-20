@@ -31,7 +31,7 @@ const AllLoans = () => {
   useEffect(() => {
     const fetchLoans = async () => {
       try {
-        const res = await fetch('http://localhost:3000/loans');
+        const res = await fetch('https://loan-link-loan-management-server.vercel.app/loans');
         // No Authorization header needed since it's a public endpoint
 
         const data = await res.json();

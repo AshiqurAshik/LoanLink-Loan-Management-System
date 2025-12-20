@@ -29,7 +29,7 @@ const LoginPage = () => {
 
     try {
       // ---------------- Admin Login ----------------
-      const adminRes = await fetch('http://localhost:3000/login', {
+      const adminRes = await fetch('https://loan-link-loan-management-server.vercel.app/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -52,7 +52,7 @@ const LoginPage = () => {
       const firebaseUser = result.user;
 
       const res = await fetch(
-        `http://localhost:3000/users/by-email?email=${firebaseUser.email}`
+        `https://loan-link-loan-management-server.vercel.app/users/by-email?email=${firebaseUser.email}`
       );
 
       let users = [];
@@ -62,7 +62,7 @@ const LoginPage = () => {
 
       // Auto-create borrower if not exists
       if (!users.length) {
-        await fetch('http://localhost:3000/users', {
+        await fetch('https://loan-link-loan-management-server.vercel.app/users', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -92,7 +92,7 @@ const LoginPage = () => {
       const firebaseUser = result.user;
 
       const res = await fetch(
-        `http://localhost:3000/users/by-email?email=${firebaseUser.email}`
+        `https://loan-link-loan-management-server.vercel.app/users/by-email?email=${firebaseUser.email}`
       );
 
       let users = [];
@@ -101,7 +101,7 @@ const LoginPage = () => {
       let role = users.length ? users[0].role : 'borrower';
 
       if (!users.length) {
-        await fetch('http://localhost:3000/users', {
+        await fetch('https://loan-link-loan-management-server.vercel.app/users', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

@@ -25,7 +25,7 @@ const RegisterPage = () => {
       await addProfileInfo(data.name, data.photoURL);
 
       // 2️⃣ Save user to MongoDB (PUBLIC ROUTE)
-      const res = await fetch('http://localhost:3000/register', {
+      const res = await fetch('https://loan-link-loan-management-server.vercel.app/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

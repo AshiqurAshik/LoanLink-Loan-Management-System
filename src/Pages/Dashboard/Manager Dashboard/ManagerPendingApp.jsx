@@ -12,7 +12,7 @@ const ManagerPendingApp = () => {
   useEffect(() => {
     const fetchApps = async () => {
       try {
-        const res = await fetch('http://localhost:3000/applications', {
+        const res = await fetch('https://loan-link-loan-management-server.vercel.app/applications', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -36,7 +36,7 @@ const ManagerPendingApp = () => {
   const handleApprove = async (id) => {
     try {
       const res = await fetch(
-        `http://localhost:3000/applications/${id}/approve`,
+        `https://loan-link-loan-management-server.vercel.app/applications/${id}/approve`,
         {
           method: 'PATCH',
           headers: {
@@ -58,7 +58,7 @@ const ManagerPendingApp = () => {
   const handleReject = async (id) => {
     try {
       const res = await fetch(
-        `http://localhost:3000/applications/${id}/reject`,
+        `https://loan-link-loan-management-server.vercel.app/applications/${id}/reject`,
         {
           method: 'PATCH',
           headers: {

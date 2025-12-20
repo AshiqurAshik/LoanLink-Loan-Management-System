@@ -22,11 +22,13 @@ import ManagerProfile from '../Pages/Dashboard/Manager Dashboard/ManagerProfile'
 import Borrower from './../Pages/Dashboard/Borrower Dasboard/Borrower';
 import BorrowerProfile from '../Pages/Dashboard/Borrower Dasboard/BorrowerProfile';
 import MyLoans from './../Pages/Dashboard/Borrower Dasboard/MyLoans';
+import ErrorPage from '../Shared/ErrorPage/ErrorPage';
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
+    errorElement:<ErrorPage></ErrorPage>,
     children: [
       { path: '/', element: <Home /> },
       { path: '/about', element: <About /> },
@@ -56,7 +58,6 @@ export const router = createBrowserRouter([
     path: '/dashboard',
     element: <Dashboard />,
     children: [
-      // ✅ Admin Panel (parent)
       {
         path: 'admin',
         element: <Admin />,

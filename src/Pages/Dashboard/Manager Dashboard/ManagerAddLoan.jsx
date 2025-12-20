@@ -22,7 +22,7 @@ const ManagerAddLoan = () => {
       data.date = new Date();
       data.showOnHome = !!data.showOnHome;
 
-      const res = await fetch('http://localhost:3000/loans', {
+      const res = await fetch('https://loan-link-loan-management-server.vercel.app/loans', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

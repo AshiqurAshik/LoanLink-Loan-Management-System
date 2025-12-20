@@ -10,7 +10,7 @@ const ManagerApproveApp = () => {
   useEffect(() => {
     const fetchApproved = async () => {
       try {
-        const res = await fetch('http://localhost:3000/applications', {
+        const res = await fetch('https://loan-link-loan-management-server.vercel.app/applications', {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();

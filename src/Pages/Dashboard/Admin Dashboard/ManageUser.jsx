@@ -11,7 +11,7 @@ const ManageUser = () => {
 
   // Fetch users
   useEffect(() => {
-    fetch("http://localhost:3000/users", {
+    fetch("https://loan-link-loan-management-server.vercel.app/users", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -28,7 +28,7 @@ const ManageUser = () => {
 
   // Update role
   const handleUpdateRole = (userId, newRole) => {
-    fetch(`http://localhost:3000/users/${userId}`, {
+    fetch(`https://loan-link-loan-management-server.vercel.app/users/${userId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify({ role: newRole }),
@@ -55,7 +55,7 @@ const ManageUser = () => {
 
   const submitSuspend = () => {
     const { userId } = suspendModal;
-    fetch(`http://localhost:3000/users/${userId}`, {
+    fetch(`https://loan-link-loan-management-server.vercel.app/users/${userId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify({

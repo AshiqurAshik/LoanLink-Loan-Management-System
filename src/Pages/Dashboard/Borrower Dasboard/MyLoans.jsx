@@ -36,7 +36,7 @@ const MyLoans = () => {
     const fetchApplications = async () => {
       try {
         const res = await fetch(
-          `http://localhost:3000/applications/${encodeURIComponent(user.email)}`
+          `https://loan-link-loan-management-server.vercel.app/applications/${encodeURIComponent(user.email)}`
         );
         if (!res.ok) {
           setApplications([]);
@@ -71,7 +71,7 @@ const MyLoans = () => {
     if (result.isConfirmed) {
       try {
         const res = await fetch(
-          `http://localhost:3000/applications/${loanId}`,
+          `https://loan-link-loan-management-server.vercel.app/applications/${loanId}`,
           {
             method: 'DELETE',
           }
@@ -95,7 +95,7 @@ const MyLoans = () => {
   // ================= PAY FEE =================
   const handlePay = async (loanId) => {
     try {
-      const res = await fetch(`http://localhost:3000/applications/${loanId}`, {
+      const res = await fetch(`https://loan-link-loan-management-server.vercel.app/applications/${loanId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ feeStatus: 'Paid' }),

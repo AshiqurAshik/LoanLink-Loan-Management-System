@@ -10,7 +10,7 @@ const AdminAllLoan = () => {
 
   // Fetch loans
   useEffect(() => {
-    fetch('http://localhost:3000/loans', {
+    fetch('https://loan-link-loan-management-server.vercel.app/loans', {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -37,7 +37,7 @@ const AdminAllLoan = () => {
       confirmButtonText: 'Yes, delete it!',
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:3000/loans/${loanId}`, {
+        fetch(`https://loan-link-loan-management-server.vercel.app/loans/${loanId}`, {
           method: 'DELETE',
           headers: { Authorization: `Bearer ${token}` },
         })
@@ -76,7 +76,7 @@ const AdminAllLoan = () => {
 
   // Save updates
   const handleSave = () => {
-    fetch(`http://localhost:3000/loans/${selectedLoan._id}`, {
+    fetch(`https://loan-link-loan-management-server.vercel.app/loans/${selectedLoan._id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

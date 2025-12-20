@@ -17,6 +17,7 @@ import {
 } from 'react-icons/fa';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../Firebase.init';
+import ErrorPage from '../../../Shared/ErrorPage/ErrorPage';
 
 const Manager = () => {
   const [user, setUser] = useState(null);
@@ -62,9 +63,7 @@ const Manager = () => {
 
   if (!user || user.role !== 'manager') {
     return (
-      <div className="flex items-center justify-center h-screen text-xl text-red-500">
-        Access Denied: Managers Only
-      </div>
+      <ErrorPage></ErrorPage>
     );
   }
 
