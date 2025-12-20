@@ -4,13 +4,12 @@ import contactImg from '../../assets/call.svg';
 
 const Contact = () => {
   return (
-    <section className="w-11/12 mx-auto py-24 relative">
-      <div className="flex flex-col-reverse lg:flex-row items-center gap-16 lg:gap-24">
+    <section className="w-11/12 mx-auto py-24 relative z-0">
+      <div className="flex flex-col-reverse lg:flex-row items-center gap-16 lg:gap-24 relative z-10">
         {/* Left: Form */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
           className="flex-1 bg-card-dark dark:bg-card-dark p-10 rounded-3xl shadow-2xl"
         >
@@ -51,8 +50,7 @@ const Contact = () => {
         {/* Right: Illustration */}
         <motion.div
           initial={{ opacity: 0, x: 50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
           className="flex-1 flex justify-center"
         >
@@ -66,16 +64,16 @@ const Contact = () => {
 
       {/* Animated Background Shapes */}
       <motion.div
-        className="absolute top-0 left-0 w-48 h-48 bg-info/20 rounded-full blur-3xl animate-pulse"
+        className="absolute top-0 left-0 w-48 h-48 bg-info/20 rounded-full blur-3xl pointer-events-none"
         initial={{ scale: 0 }}
         animate={{ scale: 1.2 }}
-        transition={{ repeat: Infinity, duration: 12, yoyo: true }}
+        transition={{ repeat: Infinity, duration: 12, repeatType: 'reverse' }}
       />
       <motion.div
-        className="absolute bottom-0 right-0 w-60 h-60 bg-info/30 rounded-full blur-3xl animate-pulse"
+        className="absolute bottom-0 right-0 w-60 h-60 bg-info/30 rounded-full blur-3xl pointer-events-none"
         initial={{ scale: 0 }}
         animate={{ scale: 1.3 }}
-        transition={{ repeat: Infinity, duration: 15, yoyo: true }}
+        transition={{ repeat: Infinity, duration: 15, repeatType: 'reverse' }}
       />
     </section>
   );

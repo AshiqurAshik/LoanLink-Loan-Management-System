@@ -1,129 +1,219 @@
-import React, { useContext, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { Link } from 'react-router';
-import { FcGoogle } from 'react-icons/fc';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import Swal from 'sweetalert2';
+import React, { useState, useContext } from 'react';
+import { EyeIcon, EyeOffIcon, BookOpenIcon } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { AuthContext } from '../../Auth/AuthContext';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { auth } from '../../Firebase.init';
 
 const LoginPage = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
   const { SignInUser, googleSignIn } = useContext(AuthContext);
-  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
-  const onSubmit = async (data) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const redirectByRole = (role) => {
+    if (role === 'admin') navigate('/dashboard/admin/manage-users');
+    else if (role === 'manager') navigate('/dashboard/manager');
+    else navigate('/');
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    setLoading(true);
+
     try {
-      await SignInUser(data.email, data.password);
-      Swal.fire({
-        icon: 'success',
-        title: 'Login Successful',
-        text: `Welcome back!`,
-        confirmButtonColor: '#4f46e5',
+      // ---------------- Admin Login ----------------
+      const adminRes = await fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
       });
+
+      if (adminRes.ok) {
+        const adminData = await adminRes.json();
+        if (adminData.role === 'admin') {
+          localStorage.setItem('role', 'admin');
+          localStorage.setItem('token', adminData.token);
+          toast.success('Logged in as Admin');
+          redirectByRole('admin');
+          setLoading(false);
+          return;
+        }
+      }
+
+      // ---------------- Firebase Login ----------------
+      const result = await SignInUser(email, password);
+      const firebaseUser = result.user;
+
+      const res = await fetch(
+        `http://localhost:3000/users/by-email?email=${firebaseUser.email}`
+      );
+
+      let users = [];
+      if (res.ok) users = await res.json();
+
+      let role = users.length ? users[0].role : 'borrower';
+
+      // Auto-create borrower if not exists
+      if (!users.length) {
+        await fetch('http://localhost:3000/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: firebaseUser.displayName || 'Borrower',
+            email: firebaseUser.email,
+            photoURL: firebaseUser.photoURL,
+            role,
+          }),
+        });
+      }
+
+      localStorage.setItem('role', role);
+      toast.success(`Logged in as ${role}`);
+      redirectByRole(role);
     } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Login Failed',
-        text: error.message,
-      });
+      console.error(error);
+      toast.error('Login failed');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
     try {
-      await googleSignIn();
-      Swal.fire({
-        icon: 'success',
-        title: 'Login Successful',
-        text: `Welcome back!`,
-        confirmButtonColor: '#4f46e5',
-      });
+      const result = await googleSignIn();
+      const firebaseUser = result.user;
+
+      const res = await fetch(
+        `http://localhost:3000/users/by-email?email=${firebaseUser.email}`
+      );
+
+      let users = [];
+      if (res.ok) users = await res.json();
+
+      let role = users.length ? users[0].role : 'borrower';
+
+      if (!users.length) {
+        await fetch('http://localhost:3000/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: firebaseUser.displayName,
+            email: firebaseUser.email,
+            photoURL: firebaseUser.photoURL,
+            role,
+          }),
+        });
+      }
+
+      localStorage.setItem('role', role);
+      toast.success(`Logged in as ${role}`);
+      redirectByRole(role);
     } catch (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Login Failed',
-        text: error.message,
-      });
+      console.error(error);
+      toast.error('Google login failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!resetEmail) {
+      toast.error('Enter your email first');
+      return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, resetEmail);
+      toast.success('Password reset email sent');
+    } catch (error) {
+      toast.error(error.message);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-base-200 px-4">
-      <div className="w-full max-w-md bg-base-100 p-8 rounded-2xl shadow-xl transition-colors">
-        <h2 className="text-3xl font-extrabold text-center text-primary mb-4">
-          Welcome Back
+    <div className="flex items-center justify-center min-h-screen bg-white px-4">
+      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
+        <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-4">
+          Login to Your Account
         </h2>
-        <p className="text-center text-gray-500 mb-6">
-          Log in to access your LoanLink dashboard
-        </p>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-5">
           {/* Email */}
-          <div>
-            <label className="label">
-              <span className="label-text">Email</span>
-            </label>
-            <input
-              type="email"
-              placeholder="you@example.com"
-              className="input input-bordered w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              {...register('email', { required: 'Email is required' })}
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-            )}
-          </div>
+          <input
+            type="email"
+            name="email"
+            autoComplete="email"
+            placeholder="Email"
+            className="input input-bordered w-full"
+            required
+            onChange={(e) => setResetEmail(e.target.value)}
+          />
 
           {/* Password */}
           <div className="relative">
-            <label className="label">
-              <span className="label-text">Password</span>
-            </label>
             <input
               type={showPassword ? 'text' : 'password'}
-              placeholder="********"
-              className="input input-bordered w-full rounded-lg pr-12 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              {...register('password', { required: 'Password is required' })}
+              name="password"
+              autoComplete="current-password"
+              placeholder="Password"
+              className="input input-bordered w-full"
+              required
             />
             <button
               type="button"
-              className="absolute right-3 top-1/2 -translate-y-1/2 mt-3 text-gray-500 hover:text-primary transition-colors"
+              className="absolute right-3 top-3"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
+              {showPassword ? <EyeOffIcon /> : <EyeIcon />}
             </button>
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
-            )}
           </div>
 
+          {/* Forgot Password */}
+          <div className="text-right text-sm">
+            <button
+              type="button"
+              onClick={handleForgotPassword}
+              className="text-blue-600 font-medium hover:underline"
+            >
+              Forgot password?
+            </button>
+          </div>
+
+          {/* Login Button */}
           <button
-            type="submit"
-            className="w-full py-3 mt-2 rounded-lg bg-primary text-white font-semibold hover:bg-primary-focus transition-all shadow-md"
+            className="btn btn-primary w-full"
+            disabled={loading}
           >
-            Log In
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
+
+          {/* Google Login */}
+          <button
+            type="button"
+            onClick={handleGoogleSignIn}
+            className="btn w-full mt-2 border border-gray-300 flex justify-center gap-2"
+          >
+            <BookOpenIcon size={18} />
+            Login with Google
           </button>
         </form>
 
-        {/* Google Login */}
-        <button
-          onClick={handleGoogleLogin}
-          className="w-full flex items-center justify-center gap-2 py-3 mt-4 rounded-lg border border-base-300 bg-base-100 font-semibold hover:bg-base-200 transition-all shadow-sm"
-        >
-          <FcGoogle size={20} />
-          Log in with Google
-        </button>
-
-        <p className="text-center text-gray-500 mt-4">
+        <p className="text-center mt-4 text-gray-700">
           Don’t have an account?{' '}
-          <Link
-            to="/register"
-            className="text-primary font-semibold hover:underline"
-          >
+          <Link to="/register" className="text-blue-600 font-semibold">
             Sign Up
           </Link>
         </p>
       </div>
+
+      <ToastContainer position="top-right" autoClose={2500} hideProgressBar />
     </div>
   );
 };

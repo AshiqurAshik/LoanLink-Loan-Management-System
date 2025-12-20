@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router'; // <-- make sure it's react-router-dom
+import { useNavigate } from 'react-router';
 
 const AllLoans = () => {
   const [loans, setLoans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState('light');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   // Observe theme changes
@@ -26,18 +27,32 @@ const AllLoans = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Fetch loans
+  // Fetch loans WITHOUT JWT (public endpoint)
   useEffect(() => {
-    fetch('http://localhost:3000/loans')
-      .then((res) => res.json())
-      .then((data) => {
-        setLoans(data);
-        setLoading(false);
-      })
-      .catch((err) => {
+    const fetchLoans = async () => {
+      try {
+        const res = await fetch('http://localhost:3000/loans');
+        // No Authorization header needed since it's a public endpoint
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          setError(data.message || 'Failed to fetch loans');
+          setLoans([]);
+        } else {
+          // Ensure loans is an array
+          setLoans(Array.isArray(data) ? data : []);
+        }
+      } catch (err) {
         console.error('Error fetching loans:', err);
+        setError('Error fetching loans');
+        setLoans([]);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchLoans();
   }, []);
 
   if (loading) {
@@ -58,6 +73,20 @@ const AllLoans = () => {
     );
   }
 
+  if (error) {
+    return (
+      <div
+        className={`flex justify-center items-center h-screen ${
+          theme === 'dark' ? 'bg-[#0A122A]' : 'bg-[#F8FAFC]'
+        }`}
+      >
+        <p className={`text-lg ${theme === 'dark' ? 'text-[#E2E8F0]' : 'text-gray-500'}`}>
+          {error}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`${
@@ -65,15 +94,7 @@ const AllLoans = () => {
       } p-8 min-h-screen flex flex-col items-center`}
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-11/12">
-        {loans.length === 0 ? (
-          <p
-            className={`col-span-full text-center ${
-              theme === 'dark' ? 'text-[#94A3B8]' : 'text-gray-500'
-            }`}
-          >
-            No loans found.
-          </p>
-        ) : (
+        {Array.isArray(loans) && loans.length > 0 ? (
           loans.map((loan, index) => (
             <motion.div
               key={loan._id}
@@ -130,24 +151,21 @@ const AllLoans = () => {
                       theme === 'dark' ? 'text-[#94A3B8]' : 'text-gray-500'
                     }`}
                   >
-                    <span className="font-medium">Category:</span>{' '}
-                    {loan.category}
+                    <span className="font-medium">Category:</span> {loan.category}
                   </p>
                   <p
                     className={`text-sm mb-1 ${
                       theme === 'dark' ? 'text-[#94A3B8]' : 'text-gray-500'
                     }`}
                   >
-                    <span className="font-medium">Interest:</span>{' '}
-                    {loan.interestRate}%
+                    <span className="font-medium">Interest:</span> {loan.interestRate}%
                   </p>
                   <p
                     className={`text-sm mb-3 ${
                       theme === 'dark' ? 'text-[#94A3B8]' : 'text-gray-500'
                     }`}
                   >
-                    <span className="font-medium">Max Limit:</span> $
-                    {loan.maxLimit}
+                    <span className="font-medium">Max Limit:</span> ${loan.maxLimit}
                   </p>
                 </div>
 
@@ -159,7 +177,7 @@ const AllLoans = () => {
                       ? 'bg-[#1E90FF] hover:bg-[#00E0FF] text-[#0A122A] shadow-xl'
                       : 'bg-[#003C8F] hover:bg-[#1E4C9A] text-white shadow-lg'
                   }`}
-                  onClick={() => navigate(`/all-loans/${loan._id}`)} // Navigate to LoanDetails
+                  onClick={() => navigate(`/all-loans/${loan._id}`)}
                 >
                   View Details
                 </motion.button>
@@ -190,6 +208,14 @@ const AllLoans = () => {
               )}
             </motion.div>
           ))
+        ) : (
+          <p
+            className={`col-span-full text-center ${
+              theme === 'dark' ? 'text-[#94A3B8]' : 'text-gray-500'
+            }`}
+          >
+            No loans found.
+          </p>
         )}
       </div>
     </div>

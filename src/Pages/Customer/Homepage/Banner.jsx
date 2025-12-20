@@ -24,7 +24,7 @@ const Banner = () => {
             <motion.a
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              href="#all-loans"
+              href="/all-loans"
               className="px-6 py-3 rounded-lg bg-info text-white font-semibold shadow-xl hover:bg-info/90 transition-all"
             >
               Get Started
@@ -32,7 +32,7 @@ const Banner = () => {
             <motion.a
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              href="#contact"
+              href="/contact"
               className="px-6 py-3 rounded-lg border border-white/70 text-white font-semibold hover:bg-white hover:text-primary transition-all"
             >
               Contact Us
