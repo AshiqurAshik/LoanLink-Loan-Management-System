@@ -39,21 +39,16 @@ const AvailableLoan = () => {
 
   if (loading) {
     return (
-      <div
-        className={`flex justify-center items-center h-screen`}
-      >
-        <p
-          className={`text-lg animate-pulse`}
-        >
-          Loading available loans...
-        </p>
+      <div className={`flex justify-center items-center h-screen`}>
+        <p className={`text-lg animate-pulse`}>Loading available loans...</p>
       </div>
     );
   }
 
   return (
-    <div className="w-11/12 mx-auto py-14"> {/* Removed bg color */}
-
+    <div className="w-11/12 mx-auto py-14">
+      {' '}
+      {/* Removed bg color */}
       {/* PREMIUM HEADER */}
       <div className="text-center mb-14">
         <h2 className="text-4xl font-extrabold bg-gradient-to-r from-[#003C8F] to-[#00B4D8] bg-clip-text text-transparent drop-shadow-sm">
@@ -66,7 +61,6 @@ const AvailableLoan = () => {
           financial needs.
         </p>
       </div>
-
       {/* PREMIUM GRID */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {loans.map((loan, index) => (
@@ -156,7 +150,7 @@ const AvailableLoan = () => {
                 }`}
                 onClick={(e) => {
                   e.stopPropagation();
-                  navigate(`/loan-details/${loan._id}`);
+                  navigate(`/all-loans/${loan._id}`);
                 }}
               >
                 View Details
@@ -189,7 +183,6 @@ const AvailableLoan = () => {
           </motion.div>
         ))}
       </div>
-
       {/* SEE MORE BUTTON */}
       <div className="text-center mt-12">
         <button
