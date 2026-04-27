@@ -31,7 +31,9 @@ const AllLoans = () => {
   useEffect(() => {
     const fetchLoans = async () => {
       try {
-        const res = await fetch('https://loan-link-loan-management-server.vercel.app/loans');
+        const res = await fetch(
+          'https://loan-link-loan-management-server.vercel.app/loans',
+        );
         // No Authorization header needed since it's a public endpoint
 
         const data = await res.json();
@@ -62,13 +64,55 @@ const AllLoans = () => {
           theme === 'dark' ? 'bg-[#0A122A]' : 'bg-[#F8FAFC]'
         }`}
       >
-        <p
-          className={`text-lg animate-pulse ${
-            theme === 'dark' ? 'text-[#E2E8F0]' : 'text-gray-500'
-          }`}
-        >
-          Loading loans...
-        </p>
+        <div className="flex flex-col items-center justify-center space-y-6">
+          {/* Premium Circular Animation */}
+          <div className="relative flex items-center justify-center">
+            {/* Outer pulse ring */}
+            <div className="absolute h-16 w-16 animate-ping rounded-full bg-blue-500/20"></div>
+
+            {/* Rotating gradient border */}
+            <div className="h-14 w-14 animate-spin rounded-full border-b-2 border-t-2 border-blue-500"></div>
+
+            {/* Center circle with icon */}
+            <div
+              className={`absolute flex h-10 w-10 items-center justify-center rounded-full shadow-lg ${
+                theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+              }`}
+            >
+              <svg
+                className="h-6 w-6 text-blue-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="height: 1em; width: 1em; M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+          </div>
+
+          {/* Text Content */}
+          <div className="text-center space-y-2">
+            <p
+              className={`text-xl font-medium tracking-wide animate-pulse ${
+                theme === 'dark' ? 'text-white' : 'text-gray-800'
+              }`}
+            >
+              Processing Application...
+            </p>
+            <p
+              className={`text-sm font-light uppercase tracking-widest ${
+                theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+              }`}
+            >
+              Securely fetching loan data
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -80,7 +124,9 @@ const AllLoans = () => {
           theme === 'dark' ? 'bg-[#0A122A]' : 'bg-[#F8FAFC]'
         }`}
       >
-        <p className={`text-lg ${theme === 'dark' ? 'text-[#E2E8F0]' : 'text-gray-500'}`}>
+        <p
+          className={`text-lg ${theme === 'dark' ? 'text-[#E2E8F0]' : 'text-gray-500'}`}
+        >
           {error}
         </p>
       </div>
@@ -151,21 +197,24 @@ const AllLoans = () => {
                       theme === 'dark' ? 'text-[#94A3B8]' : 'text-gray-500'
                     }`}
                   >
-                    <span className="font-medium">Category:</span> {loan.category}
+                    <span className="font-medium">Category:</span>{' '}
+                    {loan.category}
                   </p>
                   <p
                     className={`text-sm mb-1 ${
                       theme === 'dark' ? 'text-[#94A3B8]' : 'text-gray-500'
                     }`}
                   >
-                    <span className="font-medium">Interest:</span> {loan.interestRate}%
+                    <span className="font-medium">Interest:</span>{' '}
+                    {loan.interestRate}%
                   </p>
                   <p
                     className={`text-sm mb-3 ${
                       theme === 'dark' ? 'text-[#94A3B8]' : 'text-gray-500'
                     }`}
                   >
-                    <span className="font-medium">Max Limit:</span> ${loan.maxLimit}
+                    <span className="font-medium">Max Limit:</span> $
+                    {loan.maxLimit}
                   </p>
                 </div>
 

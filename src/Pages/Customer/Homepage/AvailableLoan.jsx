@@ -40,7 +40,55 @@ const AvailableLoan = () => {
   if (loading) {
     return (
       <div className={`flex justify-center items-center h-screen`}>
-        <p className={`text-lg animate-pulse`}>Loading available loans...</p>
+        <div className="flex flex-col items-center justify-center space-y-6">
+          {/* Premium Circular Animation */}
+          <div className="relative flex items-center justify-center">
+            {/* Outer pulse ring */}
+            <div className="absolute h-16 w-16 animate-ping rounded-full bg-blue-500/20"></div>
+
+            {/* Rotating gradient border */}
+            <div className="h-14 w-14 animate-spin rounded-full border-b-2 border-t-2 border-blue-500"></div>
+
+            {/* Center circle with icon */}
+            <div
+              className={`absolute flex h-10 w-10 items-center justify-center rounded-full shadow-lg ${
+                theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+              }`}
+            >
+              <svg
+                className="h-6 w-6 text-blue-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="height: 1em; width: 1em; M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+          </div>
+
+          {/* Text Content */}
+          <div className="text-center space-y-2">
+            <p
+              className={`text-xl font-medium tracking-wide animate-pulse ${
+                theme === 'dark' ? 'text-white' : 'text-gray-800'
+              }`}
+            >
+              Processing Application...
+            </p>
+            <p
+              className={`text-sm font-light uppercase tracking-widest ${
+                theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+              }`}
+            >
+              Securely fetching loan data
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
